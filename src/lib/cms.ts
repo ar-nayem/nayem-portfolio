@@ -36,6 +36,17 @@ export type FaqItem = {
   answer: string;
 };
 
+export type Repo = {
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  tech: string[];
+  githubUrl: string;
+  liveUrl: string | null;
+  status: string;
+};
+
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
     const res = await fetch(`${DASHBOARD_API_BASE}${path}`, {
@@ -75,5 +86,10 @@ export async function getServices(): Promise<ServiceItem[]> {
 
 export async function getFaqs(): Promise<FaqItem[]> {
   const data = await fetchJson<{ items: FaqItem[] }>("/faq");
+  return Array.isArray(data?.items) ? data.items : [];
+}
+
+export async function getRepos(): Promise<Repo[]> {
+  const data = await fetchJson<{ items: Repo[] }>("/repos");
   return Array.isArray(data?.items) ? data.items : [];
 }
